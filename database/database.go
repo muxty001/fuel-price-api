@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -10,7 +11,12 @@ import (
 var DB *sql.DB
 
 func ConnectDB() {
-	connStr := "user=postgres password=postgres123 dbname=fuel_api sslmode=disable"
+	connStr := fmt.Sprintf(
+		"user=%s password=%s dbname=%s sslmode=disable",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+	)
 
 	db, err := sql.Open("postgres", connStr)
 
@@ -20,7 +26,7 @@ func ConnectDB() {
 
 	err = db.Ping()
 
-  if err != nil {
+	if err != nil {
 		panic(err)
 	}
 

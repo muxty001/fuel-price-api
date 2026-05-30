@@ -8,8 +8,8 @@ import (
 
 type Station struct {
 	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	Location string `json:"location"`
+	Name     string `json:"name" binding:"required"`
+	Location string `json:"location" binding:"required"`
 }
 
 func GetStations(c *gin.Context) {
@@ -40,7 +40,12 @@ func GetStations(c *gin.Context) {
 func CreateStation(c *gin.Context) {
 	var station Station
 
-	c.ShouldBindJSON(&station)
+	if err := c.ShouldBindJSON(&station); err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 
 	query := `
 		INSERT INTO stations (name, location)
@@ -72,7 +77,12 @@ func UpdateStation(c *gin.Context) {
 
 	var station Station
 
-	c.ShouldBindJSON(&station)
+	if err := c.ShouldBindJSON(&station); err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 
 	query := `
 		UPDATE stations
@@ -96,5 +106,24 @@ func UpdateStation(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"message": "Station updated successfully",
+	})
+}
+
+func DeleteStation(c *gin.Context) {
+	id := c.Param("id")
+
+	query := `DELETE FROM stations WHERE id=$1`
+
+	_, err := database.DB.Exec(query, id)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": "Station deleted successfully",
 	})
 }
