@@ -3,6 +3,7 @@ package controllers
 import (
 	"fuel-api/database"
 	"time"
+	"os"
 	
 
 	"github.com/golang-jwt/jwt/v5"
