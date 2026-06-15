@@ -55,3 +55,45 @@ func CreateFuelPrice(c *gin.Context) {
 		"data":    price,
 	})
 }
+
+func GetFuelPrices(c *gin.Context) {
+	rows, err := database.DB.Query(`
+		SELECT id, station_id, petrol, diesel, kerosene
+		FROM fuel_prices
+	`)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "Failed to fetch fuel prices",
+		})
+		return
+	}
+	defer rows.Close()
+
+	var prices []FuelPrice
+
+	for rows.Next() {
+		var price FuelPrice
+
+		err := rows.Scan(
+			&price.ID,
+			&price.StationID,
+			&price.Petrol,
+			&price.Diesel,
+			&price.Kerosene,
+		)
+
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": "Failed to read fuel prices",
+			})
+			return
+		}
+
+		prices = append(prices, price)
+	}
+
+	c.JSON(200, gin.H{
+		"data": prices,
+	})
+}

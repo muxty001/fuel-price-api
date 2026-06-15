@@ -8,6 +8,7 @@ import (
 )
 
 func FuelPriceRoutes(r *gin.Engine) {
+	r.GET("/fuel-prices", controllers.GetFuelPrices)
 	r.POST(
 		"/fuel-prices",
 		middleware.AuthMiddleware(),
