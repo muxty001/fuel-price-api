@@ -97,3 +97,34 @@ func GetFuelPrices(c *gin.Context) {
 		"data": prices,
 	})
 }
+
+func GetFuelPrice(c *gin.Context) {
+	id := c.Param("id")
+
+	var price FuelPrice
+	
+	query := `
+	SELECT id, station_id, petrol, diesel, kerosene FROM fuel_prices WHERE id = $1
+	`
+	err := database.DB.QueryRow(
+		query,
+		id,
+	).Scan(
+&price.ID,
+&price.StationID,
+&price.Petrol,
+&price.Diesel,
+&price.Kerosene,
+	)	
+
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error":"Fuel price not found",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"data": price,
+	})
+}

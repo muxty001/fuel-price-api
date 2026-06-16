@@ -1,5 +1,7 @@
-# fuel-price-api
-Production-ready Fuel Price API built with Go (Golang), featuring authentication, station management, and real-time fuel price tracking.
+# Fuel Price API
+
+A REST API built with Go, Gin, and PostgreSQL for managing fuel stations and fuel prices.
+
 ## Features
 
 - User Registration
@@ -8,5 +10,16 @@ Production-ready Fuel Price API built with Go (Golang), featuring authentication
 - Station Management
 - Fuel Price Management
 - PostgreSQL Database
-- Protected Routes
-- Environment Variables
+
+## Endpoints
+
+POST /register
+POST /login
+
+GET /stations
+POST /stations
+PUT /stations/:id
+DELETE /stations/:id
+
+GET /fuel-prices
+POST /fuel-prices
