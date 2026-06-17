@@ -14,6 +14,14 @@ type FuelPrice struct {
 	Kerosene  float64 `json:"kerosene" binding:"required"`
 }
 
+type FuelPriceDetails struct {
+	StationName string `json: "station_name"`
+	Location    string `json: "station_name"`
+	Petrol      string `json: "station_name"`
+	Diesel      string `json: "station_name"`
+	Kerosene    string `json: "station_name"`
+}
+
 func CreateFuelPrice(c *gin.Context) {
 	var price FuelPrice
 
@@ -102,7 +110,7 @@ func GetFuelPrice(c *gin.Context) {
 	id := c.Param("id")
 
 	var price FuelPrice
-	
+
 	query := `
 	SELECT id, station_id, petrol, diesel, kerosene FROM fuel_prices WHERE id = $1
 	`
@@ -110,21 +118,72 @@ func GetFuelPrice(c *gin.Context) {
 		query,
 		id,
 	).Scan(
-&price.ID,
-&price.StationID,
-&price.Petrol,
-&price.Diesel,
-&price.Kerosene,
-	)	
+		&price.ID,
+		&price.StationID,
+		&price.Petrol,
+		&price.Diesel,
+		&price.Kerosene,
+	)
 
 	if err != nil {
 		c.JSON(404, gin.H{
-			"error":"Fuel price not found",
+			"error": "Fuel price not found",
 		})
 		return
 	}
 
 	c.JSON(200, gin.H{
 		"data": price,
+	})
+}
+
+func GetFuelPricesWithStations(c *gin.Context) {
+	query := `
+		SELECT
+			stations.name,
+			stations.location,
+			fuel_prices.petrol,
+			fuel_prices.diesel,
+			fuel_prices.kerosene
+		FROM fuel_prices
+		JOIN stations
+			ON fuel_prices.station_id = stations.id
+	`
+
+	rows, err := database.DB.Query(query)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "Failed to fetch fuel prices",
+		})
+		return
+	}
+	defer rows.Close()
+
+	var prices []FuelPriceDetails
+
+	for rows.Next() {
+		var price FuelPriceDetails
+
+		err := rows.Scan(
+			&price.StationName,
+			&price.Location,
+			&price.Petrol,
+			&price.Diesel,
+			&price.Kerosene,
+		)
+
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": "Failed to read fuel prices",
+			})
+			return
+		}
+
+		prices = append(prices, price)
+	}
+
+	c.JSON(200, gin.H{
+		"data": prices,
 	})
 }

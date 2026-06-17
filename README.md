@@ -23,3 +23,4 @@ DELETE /stations/:id
 
 GET /fuel-prices
 POST /fuel-prices
+GET /fuel-prices/:id
