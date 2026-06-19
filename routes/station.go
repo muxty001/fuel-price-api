@@ -10,6 +10,7 @@ import (
 
 func StationRoutes(r *gin.Engine) {
 	r.GET("/stations", controllers.GetStations)
+	r.GET("/stations/:id", controllers.GetStation)
 
 	r.POST("/stations",
 		middleware.AuthMiddleware(),

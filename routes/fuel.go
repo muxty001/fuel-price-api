@@ -8,9 +8,10 @@ import (
 )
 
 func FuelPriceRoutes(r *gin.Engine) {
-	r.GET("/fuel-prices", controllers.GetFuelPrices)
-	r.GET("/fuel-prices/:id", controllers.GetFuelPrice)
-	r.GET("/fuel-prices-details", controllers.GetFuelPricesWithStations)
+r.GET("/fuel-prices", controllers.GetFuelPrices)
+r.GET("/fuel-prices/:id", controllers.GetFuelPrice)
+r.GET("/fuel-prices/station/:id", controllers.GetFuelPricesByStation)
+r.GET("/fuel-prices-details", controllers.GetFuelPricesWithStations)
 
 	r.POST(
 		"/fuel-prices",

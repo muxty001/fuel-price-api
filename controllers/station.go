@@ -13,27 +13,66 @@ type Station struct {
 }
 
 func GetStations(c *gin.Context) {
-	rows, err := database.DB.Query("SELECT id, name, location FROM stations")
+	rows, err := database.DB.Query(
+		"SELECT id, name, location FROM stations",
+	)
 
 	if err != nil {
 		c.JSON(500, gin.H{
-			"error": err.Error(),
+			"error": "Failed to fetch stations",
 		})
 		return
 	}
+	defer rows.Close()
 
 	var stations []Station
 
 	for rows.Next() {
 		var station Station
 
-		rows.Scan(&station.ID, &station.Name, &station.Location)
+		rows.Scan(
+			&station.ID,
+			&station.Name,
+			&station.Location,
+		)
 
 		stations = append(stations, station)
 	}
 
 	c.JSON(200, gin.H{
 		"data": stations,
+	})
+}
+
+func GetStation(c *gin.Context) {
+	id := c.Param("id")
+
+	var station Station
+
+	query := `
+		SELECT id, name, location
+		FROM stations
+		WHERE id = $1
+	`
+
+	err := database.DB.QueryRow(
+		query,
+		id,
+	).Scan(
+		&station.ID,
+		&station.Name,
+		&station.Location,
+	)
+
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": "Station not found",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"data": station,
 	})
 }
 
@@ -127,3 +166,5 @@ func DeleteStation(c *gin.Context) {
 		"message": "Station deleted successfully",
 	})
 }
+
+
