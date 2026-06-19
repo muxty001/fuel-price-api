@@ -41,11 +41,11 @@ func CreateStation(c *gin.Context) {
 	var station Station
 
 	if err := c.ShouldBindJSON(&station); err != nil {
-		c.JSON(400, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+	c.JSON(400, gin.H{
+		"error": "Name and location are required",
+	})
+	return
+}
 
 	query := `
 		INSERT INTO stations (name, location)
@@ -78,11 +78,11 @@ func UpdateStation(c *gin.Context) {
 	var station Station
 
 	if err := c.ShouldBindJSON(&station); err != nil {
-		c.JSON(400, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+	c.JSON(400, gin.H{
+		"error": "Name and location are required",
+	})
+	return
+}
 
 	query := `
 		UPDATE stations

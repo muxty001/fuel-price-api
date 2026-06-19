@@ -17,4 +17,10 @@ func FuelPriceRoutes(r *gin.Engine) {
 		middleware.AuthMiddleware(),
 		controllers.CreateFuelPrice,
 	)
+
+	r.DELETE(
+		"/fuel-prices/:id",
+		middleware.AuthMiddleware(),
+		controllers.DeleteFuelPrice,
+	)
 }

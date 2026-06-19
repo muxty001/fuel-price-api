@@ -22,5 +22,7 @@ PUT /stations/:id
 DELETE /stations/:id
 
 GET /fuel-prices
-POST /fuel-prices
 GET /fuel-prices/:id
+GET /fuel-prices-details
+POST /fuel-prices
+PUT /fuel-prices/:id

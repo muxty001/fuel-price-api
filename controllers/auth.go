@@ -2,19 +2,18 @@ package controllers
 
 import (
 	"fuel-api/database"
-	"time"
 	"os"
-	
+	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
 	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 var jwtKey = []byte(os.Getenv("JWT_SECRET"))
@@ -22,7 +21,12 @@ var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 func Register(c *gin.Context) {
 	var user User
 
-	c.ShouldBindJSON(&user)
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(400, gin.H{
+			"error": "Username and password are required",
+		})
+		return
+	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(user.Password),
@@ -66,14 +70,19 @@ func Register(c *gin.Context) {
 func Login(c *gin.Context) {
 	var user User
 
-	c.ShouldBindJSON(&user)
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(400, gin.H{
+			"error": "Username and password are required",
+		})
+		return
+	}
 
 	var storedUser User
 
 	query := `
 		SELECT id, username, password
 		FROM users
-		WHERE username=$1
+		WHERE username = $1
 	`
 
 	err := database.DB.QueryRow(
@@ -106,7 +115,7 @@ func Login(c *gin.Context) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": storedUser.ID,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(),
+		"exp":     time.Now().Add(24 * time.Hour).Unix(),
 	})
 
 	tokenString, err := token.SignedString(jwtKey)

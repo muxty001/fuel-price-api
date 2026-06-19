@@ -15,11 +15,11 @@ type FuelPrice struct {
 }
 
 type FuelPriceDetails struct {
-	StationName string `json: "station_name"`
-	Location    string `json: "station_name"`
-	Petrol      string `json: "station_name"`
-	Diesel      string `json: "station_name"`
-	Kerosene    string `json: "station_name"`
+	StationName string `json:"station_name"`
+	Location    string `json:"location"`
+	Petrol      string `json:"petrol"`
+	Diesel      string `json:"diesel"`
+	Kerosene    string `json:"kerosene"`
 }
 
 func CreateFuelPrice(c *gin.Context) {
@@ -27,7 +27,7 @@ func CreateFuelPrice(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&price); err != nil {
 		c.JSON(400, gin.H{
-			"error": err.Error(),
+			"error": "Station ID, petrol, diesel and kerosene are required",
 		})
 		return
 	}
@@ -185,5 +185,27 @@ func GetFuelPricesWithStations(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"data": prices,
+	})
+}
+
+func DeleteFuelPrice(c *gin.Context) {
+	id := c.Param("id")
+
+	query := `
+		DELETE FROM fuel_prices
+		WHERE id = $1
+	`
+
+	_, err := database.DB.Exec(query, id)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "Failed to delete fuel price",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": "Fuel price deleted successfully",
 	})
 }
