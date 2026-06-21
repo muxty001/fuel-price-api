@@ -18,11 +18,11 @@ func GetStations(c *gin.Context) {
 	)
 
 	if err != nil {
-		c.JSON(500, gin.H{
-			"error": "Failed to fetch stations",
-		})
-		return
-	}
+    c.JSON(500, gin.H{
+        "error": err.Error(),
+    })
+    return
+}
 	defer rows.Close()
 
 	var stations []Station

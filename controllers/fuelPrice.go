@@ -243,12 +243,11 @@ func GetFuelPricesByStation(c *gin.Context) {
 		)
 
 		if err != nil {
-			c.JSON(500, gin.H{
-				"error": "Failed to read fuel prices",
-			})
-			return
-		}
-
+    c.JSON(500, gin.H{
+        "error": err.Error(),
+    })
+    return
+}
 		prices = append(prices, price)
 	}
 
