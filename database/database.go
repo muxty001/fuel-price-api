@@ -11,14 +11,9 @@ import (
 var DB *sql.DB
 
 func ConnectDB() {
-	connStr := fmt.Sprintf(
-		"user=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
-	)
+	databaseURL := os.Getenv("DATABASE_URL")
 
-	db, err := sql.Open("postgres", connStr)
+	db, err := sql.Open("postgres", databaseURL)
 
 	if err != nil {
 		panic(err)
