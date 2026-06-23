@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
-
+	"fuel-api/controllers"
 	"fuel-api/database"
 	"fuel-api/routes"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -20,6 +20,7 @@ func main() {
 
 	r := gin.Default()
 
+	r.GET("/", controllers.Home)
 	routes.AuthRoutes(r)
 	routes.StationRoutes(r)
 	routes.FuelPriceRoutes(r)
