@@ -1,51 +1,48 @@
 # Fuel Price API
 
-A REST API built with Go, Gin and PostgreSQL for managing fuel stations and fuel prices.
+A RESTful API built with Go (Golang), Gin, and PostgreSQL for managing fuel stations and fuel prices.
 
 ## Features
 
 - User Registration
-- User Login (JWT Authentication)
+- User Login with JWT Authentication
 - Create Fuel Stations
-- Update Fuel Stations
-- Delete Fuel Stations
-- View Fuel Stations
-- Add Fuel Prices
+- Get All Stations
+- Get Station by ID
+- Update Stations
+- Delete Stations
+- Create Fuel Prices
+- Get Fuel Prices
+- Get Fuel Prices by Station
 - Delete Fuel Prices
-- Filter Fuel Prices By Station
+- PostgreSQL Database Integration
+- Cloud Deployment on Render
 
-## Technologies
+## Technologies Used
 
-- Go
-- Gin
+- Go (Golang)
+- Gin Framework
 - PostgreSQL
-- JWT
-- Thunder Client
+- JWT Authentication
+- Render Deployment
 
-## Endpoints
+## Live API
+
+https://fuel-price-api-g5wi.onrender.com/
+
+## Example Endpoints
+
+GET /stations
+
+GET /fuel-prices
 
 POST /register
 
 POST /login
 
-GET /stations
-
-GET /stations/:id
-
-POST /stations
-
-PUT /stations/:id
-
-DELETE /stations/:id
-
-GET /fuel-prices
-
-GET /fuel-prices/:id
-
-GET /fuel-prices/station/:id
-
-GET /fuel-prices-details
-
 POST /fuel-prices
 
-DELETE /fuel-prices/:id
+## Author
+
+Muxty
+
